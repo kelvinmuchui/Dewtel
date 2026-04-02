@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, X, ChevronDown, Smartphone, Apple, Smartphone as SamsungIcon, Globe } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import { PRODUCTS, CATEGORIES } from '../constants';
 import { ProductCard } from '../components/ProductCard';
-import { cn } from '../lib/utils';
+import { cn, formatPrice } from '../lib/utils';
 
 export const ProductListPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 300000]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
@@ -23,16 +23,12 @@ export const ProductListPage = () => {
   }, [searchQuery, selectedCategory, priceRange]);
 
   const getCategoryIcon = (id: string) => {
-    switch (id) {
-      case 'apple': return <Apple size={20} />;
-      case 'samsung': return <SamsungIcon size={20} />;
-      case 'google': return <Globe size={20} />;
-      default: return <Smartphone size={20} />;
-    }
+    const cat = CATEGORIES.find(c => c.id === id);
+    return cat ? <span className="text-lg">{cat.icon}</span> : <Search size={20} />;
   };
 
   return (
-    <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <div className="pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
         <div>
           <h1 className="font-headline font-extrabold text-5xl md:text-6xl tracking-tight mb-4">
@@ -95,22 +91,22 @@ export const ProductListPage = () => {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden mb-12"
           >
-            <div className="bg-surface-container-low rounded-[32px] p-8 border border-surface-container-high grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="bg-surface-container-low rounded-4xl p-8 border border-surface-container-high grid grid-cols-1 md:grid-cols-3 gap-10">
               <div>
                 <h4 className="font-headline font-bold text-lg mb-6">Price Range</h4>
                 <div className="space-y-4">
                   <input
                     type="range"
                     min="0"
-                    max="2000"
-                    step="50"
+                    max="300000"
+                    step="1000"
                     value={priceRange[1]}
                     onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                     className="w-full accent-primary"
                   />
                   <div className="flex justify-between text-sm font-bold text-on-surface-variant">
-                    <span>$0</span>
-                    <span>Up to ${priceRange[1]}</span>
+                    <span>KSh 0</span>
+                    <span>Up to {formatPrice(priceRange[1])}</span>
                   </div>
                 </div>
               </div>
@@ -129,7 +125,7 @@ export const ProductListPage = () => {
               <div className="flex items-end justify-end">
                 <button
                   onClick={() => {
-                    setPriceRange([0, 2000]);
+                    setPriceRange([0, 300000]);
                     setSelectedCategory('all');
                     setSearchQuery('');
                   }}

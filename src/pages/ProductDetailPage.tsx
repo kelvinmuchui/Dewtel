@@ -4,6 +4,27 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ShoppingCart, ArrowLeft, Heart, Share2, Check, Smartphone, Cpu, Battery, Camera, Layers, Monitor } from 'lucide-react';
 import { PRODUCTS } from '../constants';
 import { cn } from '../lib/utils';
+import { useCart } from '../contexts/CartContext';
+
+const ThumbnailImage: React.FC<{ productId: string; index: number }> = ({ productId, index }) => {
+  const [imageSrc, setImageSrc] = useState(`https://picsum.photos/seed/${productId}${index}/400/400`);
+
+  const handleError = () => {
+    setImageSrc('/images/placeholder.svg');
+  };
+
+  return (
+    <div className="aspect-square bg-surface-container-low rounded-3xl overflow-hidden border border-surface-container-high cursor-pointer hover:border-primary transition-all">
+      <img
+        src={imageSrc}
+        alt={`thumbnail ${index}`}
+        onError={handleError}
+        className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity"
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  );
+};
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
@@ -11,6 +32,18 @@ export const ProductDetailPage = () => {
   const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
   const [selectedStorage, setSelectedStorage] = useState(product?.storageOptions[0]);
   const [isLiked, setIsLiked] = useState(false);
+  const [mainImageSrc, setMainImageSrc] = useState(product?.image || '');
+  const { addToCart } = useCart();
+
+  const handleMainImageError = () => {
+    setMainImageSrc('/images/placeholder.svg');
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, selectedColor, selectedStorage);
+    }
+  };
 
   if (!product) {
     return (
@@ -33,7 +66,7 @@ export const ProductDetailPage = () => {
   };
 
   return (
-    <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <div className="pt-32 pb-20 px-4 md:px-6 max-w-7xl mx-auto">
       <Link to="/devices" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-bold mb-12 transition-colors group">
         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
         Back to Gallery
@@ -48,8 +81,9 @@ export const ProductDetailPage = () => {
             className="aspect-square bg-surface-container-low rounded-[48px] overflow-hidden border border-surface-container-high relative group"
           >
             <img
-              src={product.image}
+              src={mainImageSrc}
               alt={product.name}
+              onError={handleMainImageError}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               referrerPolicy="no-referrer"
             />
@@ -71,14 +105,7 @@ export const ProductDetailPage = () => {
 
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square bg-surface-container-low rounded-3xl overflow-hidden border border-surface-container-high cursor-pointer hover:border-primary transition-all">
-                <img
-                  src={`https://picsum.photos/seed/${product.id}${i}/400/400`}
-                  alt={`${product.name} thumbnail ${i}`}
-                  className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+              <ThumbnailImage key={i} productId={product.id} index={i} />
             ))}
           </div>
         </div>
@@ -156,7 +183,10 @@ export const ProductDetailPage = () => {
           </div>
 
           <div className="flex gap-4">
-            <button className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-5 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-xl shadow-primary/30">
+            <button 
+              onClick={handleAddToCart}
+              className="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-5 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-xl shadow-primary/30"
+            >
               <ShoppingCart size={24} />
               Add to Cart
             </button>
@@ -176,7 +206,7 @@ export const ProductDetailPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Object.entries(product.specs).map(([key, value]) => (
-            <div key={key} className="bg-surface-container-low rounded-[32px] p-8 border border-surface-container-high hover:border-primary/20 transition-all group">
+            <div key={key} className="bg-surface-container-low rounded-4xl p-8 border border-surface-container-high hover:border-primary/20 transition-all group">
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
                 {specIcons[key as keyof typeof specIcons]}
               </div>

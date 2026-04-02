@@ -7,30 +7,44 @@
   
   --color-primary: #006781;
   --color-primary-container: #5acaf2;
-  --color-secondary: #805600;
-  --color-secondary-container: #fdaf00;
-  --color-surface: #fcf9f8;
-  --color-surface-container-low: #f6f3f2;
-  --color-surface-container-high: #eae7e7;
-  --color-on-surface: #1c1b1b;
-  --color-on-surface-variant: #3e484d;
+  --color-secondary: #0ea5e9;
+  --color-surface: #ffffff;
+  --color-surface-container: #f6f6f6;
+  --color-on-surface: #121212;
+  --color-on-surface-variant: #4b5563;
 }
 
 @layer base {
   body {
-    @apply bg-surface text-on-surface font-sans;
+    @apply bg-white text-on-surface font-sans antialiased;
+  }
+
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
   }
 }
 
 .glass-nav {
-  background: rgba(252, 249, 248, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
 }
 
-.hero-gradient {
-  background: linear-gradient(135deg, #006781 0%, #5acaf2 100%);
+.hero-gradient-button {
+  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 100%);
+}
+
+.newsletter-gradient {
+  background: linear-gradient(135deg, #22d3ee 0%, #60a5fa 100%);
 }
 
 .premium-shadow {
-  box-shadow: 0 20px 40px rgba(0, 31, 41, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-hover:hover {
+  transform: translateY(-10px);
 }

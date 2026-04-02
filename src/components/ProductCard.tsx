@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ShoppingCart, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
-import { cn } from '../lib/utils';
+import { cn, formatPrice } from '../lib/utils';
+import { useCart } from '../contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const [imageSrc, setImageSrc] = useState(product.image);
+  const { addToCart } = useCart();
+
+  const handleImageError = () => {
+    setImageSrc('/images/placeholder.svg');
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+  };
+
   return (
     <motion.div
       whileHover={{ y: -10 }}
@@ -17,8 +31,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <Link to={`/product/${product.id}`} className="block relative aspect-square overflow-hidden bg-surface-container-low">
         <motion.img
-          src={product.image}
+          src={imageSrc}
           alt={product.name}
+          onError={handleImageError}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           referrerPolicy="no-referrer"
         />
@@ -40,8 +55,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.name}
             </h3>
           </div>
-          <p className="font-headline font-extrabold text-xl text-on-surface">
-            ${product.price}
+          <p className="font-headline font-extrabold text-xl text-on-surface whitespace-nowrap">
+            {formatPrice(product.price)}
           </p>
         </div>
 
@@ -57,7 +72,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Details
             <ArrowRight size={16} />
           </Link>
-          <button className="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20">
+          <button 
+            onClick={handleAddToCart}
+            className="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
+          >
             <ShoppingCart size={20} />
           </button>
         </div>
