@@ -16,6 +16,7 @@ import { AdminProducts } from './pages/AdminProducts';
 import { AdminCustomers } from './pages/AdminCustomers';
 import { AdminAnalytics } from './pages/AdminAnalytics';
 import { AdminSettings } from './pages/AdminSettings';
+import { Footer } from './components/Footer';
 import { CartProvider } from './contexts/CartContext';
 
 export default function App() {
@@ -35,18 +36,21 @@ export default function App() {
               <>
                 <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
                 <HomePage />
+                <Footer />
               </>
             } />
             <Route path="/devices" element={
               <>
                 <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
                 <ProductListPage />
+                <Footer />
               </>
             } />
             <Route path="/product/:id" element={
               <>
                 <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
                 <ProductDetailPage />
+                <Footer />
               </>
             } />
 
