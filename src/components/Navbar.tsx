@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Search, Menu, X, User, Heart, Moon, Sun, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -17,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
   const { getTotalItems } = useCart();
 
   useEffect(() => {
@@ -114,14 +115,17 @@ export const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
             <User size={20} />
           </button>
 
-          <button className="relative p-2 rounded-full border border-surface-container-high hover:bg-surface-container-low dark:hover:bg-slate-800 transition-all">
+          <Link
+            to="/cart"
+            className="relative p-2 rounded-full border border-surface-container-high hover:bg-surface-container-low dark:hover:bg-slate-800 transition-all"
+          >
             <ShoppingCart size={20} />
             {getTotalItems() > 0 && (
               <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                 {getTotalItems()}
               </span>
             )}
-          </button>
+          </Link>
 
           <button
             className="lg:hidden p-2 rounded-full border border-surface-container-high hover:bg-surface-container-low dark:hover:bg-slate-800 transition-all"

@@ -9,6 +9,7 @@ import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
 import { ProductListPage } from './pages/ProductListPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
+import { CartPage } from './pages/CartPage';
 import { AdminLayout } from './components/AdminLayout';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { AdminOrders } from './pages/AdminOrders';
@@ -50,6 +51,13 @@ export default function App() {
               <>
                 <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
                 <ProductDetailPage />
+                <Footer />
+              </>
+            } />
+            <Route path="/cart" element={
+              <>
+                <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((prev) => !prev)} />
+                <CartPage />
                 <Footer />
               </>
             } />
